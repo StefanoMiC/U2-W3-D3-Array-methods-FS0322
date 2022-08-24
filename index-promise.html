@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Books</title>
+</head>
+
+<body>
+    <h1 class="d-inline-block align-middle">Books</h1>
+    <button class="d-inline-block btn btn-primary align-middle" onclick="console.log(outerArray)">Read Outer
+        Array</button>
+
+    <div class="input-group mb-3 d-none">
+        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username"
+            aria-describedby="basic-addon2" onchange="filterBooks()">
+        <div class="input-group-append">
+            <button class="btn btn-dark" onclick="filterBooks()">Filter</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+
+    <script>
+        let outerArray = []
+
+        const filterBooks = () => {
+            const input = document.querySelector(".form-control")
+            const searchQuery = input.value
+
+            // fetch("https://striveschool-api.herokuapp.com/books")
+            //     .then(response => response.json())
+            //     .then(books => {
+            //         const filteredBooks = books.filter(book => book.title.toLowerCase().includes(searchQuery.toLowerCase()))
+            //         renderBooks(filteredBooks)
+            //     })
+            //     .catch(error => console.log(error))
+
+            const filteredBooks = outerArray.filter(book => book.title.toLowerCase().includes(searchQuery.toLowerCase()))
+            renderBooks(filteredBooks)
+        }
+
+        const renderBooks = (array) => {
+            const grid = document.querySelector(".row")
+            console.log(array)
+
+            grid.innerHTML = ""
+
+            if (Array.isArray(array)) {
+                array.forEach(book => {
+                    const col = document.createElement("div")
+                    col.className = "col-md-4"
+
+                    col.innerHTML = `
+                                        <div class="card">
+                                            <img src="${book.img}" class="card-img-top" alt="${book.title}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${book.title}</h5>
+                                                <p class="card-text">${book.category}</p>
+                                                <a href="#" class="btn btn-primary">${book.price}</a>
+                                            </div>
+                                        </div>
+                        `
+
+                    grid.appendChild(col)
+                })
+
+                // grid.innerHTML = array.map(book => `
+                //     <div class="col-md-4">
+                //         <div class="card">
+                //             <img src="${book.img}" class="card-img-top" alt="${book.title}">
+                //             <div class="card-body">
+                //                 <h5 class="card-title">${book.title}</h5>
+                //                 <p class="card-text">${book.category}</p>
+                //                 <a href="#" class="btn btn-primary">${book.price}</a>
+                //             </div>
+                //         </div>
+                //     </div>
+                // `).join("")
+
+
+            } else {
+                alert("you need to provide an actual array")
+            }
+        }
+
+
+        window.onload = () => {
+            fetch("https://striveschool-api.herokuapp.com/books")
+                .then(response => response.json())
+                .then(books => {
+                    renderBooks(books)
+                    outerArray = books
+
+                    document.querySelector(".input-group").classList.remove("d-none")
+                })
+                .catch(error => console.log(error))
+
+
+        }
+    </script>
+</body>
+
+</html>
